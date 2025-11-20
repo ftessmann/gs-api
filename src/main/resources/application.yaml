@@ -20,3 +20,13 @@ spring:
   docker:
     compose:
       enabled: true
+
+sensor:
+  api-key: ${SENSOR_API_KEY:dev-sensor-key}
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /docs
+    enabled: true
