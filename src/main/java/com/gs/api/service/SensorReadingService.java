@@ -62,6 +62,24 @@ public class SensorReadingService {
                 .toList();
     }
 
+    public List<SensorReadingResponseDTO> getReadingsForUserSensorBetween(
+            Long userId,
+            Long sensorId,
+            Instant start,
+            Instant end
+    ) {
+        Sensor sensor = sensorRepository.findById(sensorId)
+                .filter(s -> s.getSector().getSupervisor().getId().equals(userId))
+                .orElseThrow(() -> new EntityNotFoundException("Sensor não encontrado"));
+
+        List<SensorReading> readings =
+                sensorReadingRepository.findBySensorIdAndTimestampBetween(sensor.getId(), start, end);
+
+        return readings.stream()
+                .map(this::toResponseDTO)
+                .toList();
+    }
+
     private void checkThresholdsAndNotify(SensorReading reading) {
         Sector sector = reading.getSensor().getSector();
         User supervisor = sector.getSupervisor();

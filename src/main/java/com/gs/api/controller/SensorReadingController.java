@@ -14,10 +14,12 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.List;
 
 @RestController
@@ -135,6 +137,52 @@ public class SensorReadingController {
 
         List<SensorReadingResponseDTO> readings =
                 sensorReadingService.getReadingsForUserSensor(userId, sensorCode);
+        return ResponseEntity.ok(readings);
+    }
+
+    @GetMapping("/sensor/{sensorId}/range")
+    @Operation(
+            summary = "Listar leituras por sensor e intervalo de tempo",
+            description = "Retorna as leituras de um sensor específico, pertencente a um setor do usuário autenticado, " +
+                    "entre as datas/hora informadas (start e end em formato ISO-8601)."
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Leituras encontradas",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = SensorReadingResponseDTO.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Sensor não encontrado ou não pertence ao usuário",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Parâmetros de data/hora inválidos",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Não autenticado",
+                    content = @Content
+            )
+    })
+    public ResponseEntity<List<SensorReadingResponseDTO>> getReadingsBySensorAndRange(
+            @PathVariable Long sensorId,
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant start,
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant end
+    ) {
+        Long userId = authenticatedUserService.getAuthenticatedUserId();
+
+        List<SensorReadingResponseDTO> readings =
+                sensorReadingService.getReadingsForUserSensorBetween(userId, sensorId, start, end);
+
         return ResponseEntity.ok(readings);
     }
 }
