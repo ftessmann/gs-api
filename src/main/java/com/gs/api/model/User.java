@@ -1,5 +1,6 @@
 package com.gs.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gs.api.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -7,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -30,6 +32,20 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(length = 20)
+    private String telephone;
+
+    @OneToMany(mappedBy = "supervisor")
+    @JsonIgnore
+    private List<Sector> sectors = new ArrayList<>();
+
+    @OneToMany(mappedBy = "recipient")
+    @JsonIgnore
+    private List<Notification> notifications = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private Role role = Role.USER;
