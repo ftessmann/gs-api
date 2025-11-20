@@ -21,6 +21,8 @@ public class AdminUserInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
         if (!userRepository.existsByEmail("admin@admin.com")) {
             User admin = User.builder()
+                    .name("admin")
+                    .telephone("11999999999")
                     .username("admin")
                     .email("admin@admin.com")
                     .password(passwordEncoder.encode("123456aB!"))
