@@ -1,9 +1,6 @@
 target
 .git
 .idea
-.mvn
-mvnw
-mvnw.cmd
 *.class
 *.log
 .env
