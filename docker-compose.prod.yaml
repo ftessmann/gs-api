@@ -1,0 +1,37 @@
+services:
+  app:
+    build: .
+    container_name: gs-api-app
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+      - SENSOR_API_KEY=${SENSOR_API_KEY}
+      - JAVA_TOOL_OPTIONS=-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0
+    depends_on:
+      - postgres
+    networks:
+      - gs-network
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: gs-api-db
+    restart: always
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - gs-network
+
+volumes:
+  postgres_data:
+
+networks:
+  gs-network:
+    driver: bridge
