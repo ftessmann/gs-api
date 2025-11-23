@@ -1,5 +1,6 @@
 package com.gs.api.controller;
 
+import com.gs.api.model.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -46,7 +47,13 @@ public class MeController {
             @Parameter(hidden = true)
             @AuthenticationPrincipal UserDetails userDetails
     ) {
+        Long userId = null;
+
+        if (userDetails instanceof User) {
+            userId = ((User) userDetails).getId();
+        }
         return Map.of(
+                "id", userId != null ? userId : "N/A",
                 "username", userDetails.getUsername(),
                 "authorities", userDetails.getAuthorities()
         );
