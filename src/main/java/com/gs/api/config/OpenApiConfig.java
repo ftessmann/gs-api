@@ -18,9 +18,13 @@ public class OpenApiConfig {
 
     @Bean
     public OpenAPI customOpenAPI() {
-        Server server = new Server();
-        server.setUrl("http://localhost:8080");
-        server.setDescription("OpenAPI Documentation - Development");
+        Server devServer = new Server();
+        devServer.setUrl("http://localhost:8080");
+        devServer.setDescription("OpenAPI Documentation - Development");
+
+        Server prodServer = new Server();
+        prodServer.setUrl("http://68.221.195.55:8080");
+        prodServer.setDescription("OpenAPI Documentation - Production");
 
         Info info = new Info()
                 .title("GS - API Documentation")
@@ -39,7 +43,7 @@ public class OpenApiConfig {
 
         return new OpenAPI()
                 .info(info)
-                .servers(List.of(server))
+                .servers(List.of(devServer, prodServer))
                 .components(new Components()
                         .addSecuritySchemes(SECURITY_SCHEME_NAME, security)
                 )
