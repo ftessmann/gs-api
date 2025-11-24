@@ -97,3 +97,6 @@ docker compose -f docker-compose.prod.yaml up -d --build
 ```
 
 Caso não consiga acessar a sua aplicação, verifique no seu provedor cloud para liberação das portas necessárias.
+
+### Arquitetura Cloud
+<img src="./gs-architecture.png" alt="Diagrama" width="600">
