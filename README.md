@@ -58,3 +58,42 @@ alto volume de escritas simultâneas, como as leituras dos sensores, sem bloquea
 Imagens Alpine, baseadas no Alpine Linux, distro Linux extremamente leve e focada em eficiência de recursos, uma imagem 
 Alpine tende a ser muitas vezes menor que uma imagem Debian ou Ubuntu, resultando em downloads mais rápidos, menor consumo
 de armazenamento em disco e tempo de build e deploy reduzidos para pipelines de CI/CD.
+
+### Vídeo de demonstração
+https://www.youtube.com/watch?v=5pgbD9jv6WA
+
+### Testes e uso da API
+
+#### Uso local
+Necessário possuir Docker instalado na máquina, ao rodar a aplicação, irá criar um container com o banco de dados Postgres,
+pronto para uso, no Swagger, usar a documentação de desenvolvimento
+
+#### Uso em Cloud
+Provisione a sua máquina Ubuntu ou outra distro Linux de sua preferência, configure seu acesso SSH, instale nano, curl, 
+docker e git e clone o repositório:
+```bash
+git clone https://github.com/ftessmann/gs-api.git
+```
+
+Acesse o repositório na sua máquina:
+```bash
+cd gs-api
+```
+
+Crie a sua .env com as infos:
+```bash
+nano .env
+
+POSTGRES_DB=seu_banco
+POSTGRES_USER=seu_user
+POSTGRES_PASSWORD=sua_senha
+
+SENSOR_API_KEY=sua_key
+```
+
+Instale o projeto com Docker Compose:
+```bash
+docker compose -f docker-compose.prod.yaml up -d --build
+```
+
+Caso não consiga acessar a sua aplicação, verifique no seu provedor cloud para liberação das portas necessárias.
